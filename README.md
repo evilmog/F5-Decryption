@@ -99,3 +99,76 @@ Important Notes:
 - The 2-character salt (after $M$) is prepended to the plaintext before encryption.
 - This script strips it back out after decrypting.
 ```
+
+# 🔐 F5 Service Account Password Decryption Tool
+
+This tool decrypts F5 service account passwords stored in the `$M$<salt>$<base64>` format using the master decryption key retrieved from the F5 device (`f5mku -K`).
+
+---
+
+## 🧰 Requirements
+
+- Python 3.6+
+- [`pycryptodome`](https://pypi.org/project/pycryptodome/)
+
+Install with:
+
+```bash
+pip install pycryptodome
+```
+
+---
+
+## 🛠️ Usage
+
+### 📦 Example Keys
+
+- **F5 Master Decryption Key**:  
+  `Zh1XXgA6MzxdTC1bOJEgSg==`
+
+- **Encrypted Password for `Password`**:  
+  `$M$qD$B+Sk64kVHBE5tQ0XnkkWhA==`
+
+---
+
+### ▶️ Basic Command-Line Usage
+
+You can provide the key and password directly via CLI:
+
+```bash
+python3 f5-new.py \
+  --master-key 'Zh1XXgA6MzxdTC1bOJEgSg==' \
+  --password '$M$qD$B+Sk64kVHBE5tQ0XnkkWhA=='
+```
+
+---
+
+### 🌍 Environment Variable Support
+
+You can also set values using environment variables instead of CLI args:
+
+```bash
+export F5_MASTER_KEY='Zh1XXgA6MzxdTC1bOJEgSg=='
+export F5_PASSWORD='$M$qD$B+Sk64kVHBE5tQ0XnkkWhA=='
+
+python3 f5-new.py
+```
+
+---
+
+### 🧑‍💻 Interactive Mode
+
+If neither CLI args nor environment variables are provided, the script will prompt you interactively for:
+
+- The master key (base64 from `f5mku -K`)
+- The encrypted password string
+
+---
+
+## ⚠️ Notes
+
+- The encrypted password **must start with `$M$`**.
+- Ensure the encrypted string is wrapped in **single quotes** (`'...'`) to avoid shell expansion issues (especially on macOS or Zsh).
+- AES decryption is performed in **ECB mode**, as used internally by F5.
+
+---
