@@ -170,5 +170,5 @@ If neither CLI args nor environment variables are provided, the script will prom
 - The encrypted password **must start with `$M$`**.
 - Ensure the encrypted string is wrapped in **single quotes** (`'...'`) to avoid shell expansion issues (especially on macOS or Zsh).
 - AES decryption is performed in **ECB mode**, as used internally by F5.
-
+- An additional tool was added to decrypt the master key using the unit key if you want to avoid f5mku -K
 ---
